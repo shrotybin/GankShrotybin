@@ -28,7 +28,7 @@ public class RetrofitFactory {
         OkHttpClient build = client.build();
 
         Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("http://gank.io/api/")
+                .baseUrl("http://gank.io/api/search/query/listview/category/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(build);
 
