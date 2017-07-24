@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true);
+
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mCommonAdapter);
 
