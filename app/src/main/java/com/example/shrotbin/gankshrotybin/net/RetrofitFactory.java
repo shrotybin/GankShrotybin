@@ -1,6 +1,7 @@
 package com.example.shrotbin.gankshrotybin.net;
 
 import com.example.shrotbin.gankshrotybin.api.GankApi;
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.util.concurrent.TimeUnit;
 
@@ -30,6 +31,7 @@ public class RetrofitFactory {
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl("http://gank.io/api/search/query/listview/category/")
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(build);
 
         Retrofit retrofit = builder.build();

@@ -15,9 +15,9 @@ import com.zhy.adapter.recyclerview.base.ViewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,21 +44,17 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mCommonAdapter);
 
         RetrofitFactory retrofitFactory = new RetrofitFactory();
-        Call<HeaderImage> headerImage = retrofitFactory.getGankApi().getHeaderImage(1);
-        headerImage.enqueue(new Callback<HeaderImage>() {
-            @Override
-            public void onResponse(Call<HeaderImage> call, Response<HeaderImage> response) {
-                HeaderImage body = response.body();
-                mResultsBean.clear();
-                mResultsBean.addAll(body.getResults());
-                mCommonAdapter.notifyDataSetChanged();
-            }
 
-            @Override
-            public void onFailure(Call<HeaderImage> call, Throwable t) {
-
-            }
-        });
-
+        retrofitFactory.getGankApi().getHeaderImage(1)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<HeaderImage>() {
+                    @Override
+                    public void accept(HeaderImage headerImage) throws Exception {
+                        mResultsBean.clear();
+                        mResultsBean.addAll(headerImage.getResults());
+                        mCommonAdapter.notifyDataSetChanged();
+                    }
+                });
     }
 }
