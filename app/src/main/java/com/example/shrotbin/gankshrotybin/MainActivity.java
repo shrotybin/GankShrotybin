@@ -1,6 +1,7 @@
 package com.example.shrotbin.gankshrotybin;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +23,7 @@ import io.reactivex.schedulers.Schedulers;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
+    private TabLayout mTabLayout;
     private CommonAdapter<HeaderImage.ResultsBean> mCommonAdapter;
     private List<HeaderImage.ResultsBean> mResultsBean = new ArrayList<>();
 
@@ -30,6 +32,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mRecyclerView = (RecyclerView) findViewById(R.id.header_iamge_recycler);
+        mTabLayout= (TabLayout) findViewById(R.id.main_tab);
+        mTabLayout.addTab(mTabLayout.newTab().setText("Android"));
+        mTabLayout.addTab(mTabLayout.newTab().setText("IOS"));
+
         mCommonAdapter = new CommonAdapter<HeaderImage.ResultsBean>(this, R.layout.item_header_iamge, mResultsBean) {
             @Override
             protected void convert(ViewHolder holder, HeaderImage.ResultsBean resultsBean, int position) {
