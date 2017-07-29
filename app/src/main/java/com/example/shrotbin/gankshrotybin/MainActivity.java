@@ -31,10 +31,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        String[] stringArray = getResources().getStringArray(R.array.tablist);
         mRecyclerView = (RecyclerView) findViewById(R.id.header_iamge_recycler);
-        mTabLayout= (TabLayout) findViewById(R.id.main_tab);
-        mTabLayout.addTab(mTabLayout.newTab().setText("Android"));
-        mTabLayout.addTab(mTabLayout.newTab().setText("IOS"));
+        mTabLayout = (TabLayout) findViewById(R.id.main_tab);
+        for (int i = 0; i < stringArray.length; i++) {
+            mTabLayout.addTab(mTabLayout.newTab().setText(stringArray[i]));
+        }
 
         mCommonAdapter = new CommonAdapter<HeaderImage.ResultsBean>(this, R.layout.item_header_iamge, mResultsBean) {
             @Override
