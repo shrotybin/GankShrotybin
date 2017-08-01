@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.example.shrotbin.gankshrotybin.base.RxSchedulers;
 import com.example.shrotbin.gankshrotybin.bean.HeaderImage;
+import com.example.shrotbin.gankshrotybin.bean.VideoBean;
 import com.example.shrotbin.gankshrotybin.net.RetrofitFactory;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
@@ -17,6 +18,9 @@ import com.zhy.adapter.recyclerview.base.ViewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 
 public class MainActivity extends AppCompatActivity {
@@ -43,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
             protected void convert(ViewHolder holder, HeaderImage.ResultsBean resultsBean, int position) {
                 ImageView imageView = holder.getView(R.id.header_iamge);
                 Glide.with(MainActivity.this).load(resultsBean.getUrl()).into(imageView);
+                holder.setText(R.id.header_desc, resultsBean.getDesc());
             }
         };
 
@@ -51,8 +56,18 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mCommonAdapter);
 
-        RetrofitFactory.getInstence().getGankApi().getHeaderImage(1)
-                .compose(RxSchedulers.<HeaderImage>compose())
+        Observable.zip(RetrofitFactory.getInstence().getGankApi().getHeaderImage(1),
+                RetrofitFactory.getInstence().getGankApi().getVideo(10), new BiFunction<HeaderImage, VideoBean, HeaderImage>() {
+                    @Override
+                    public HeaderImage apply(@NonNull HeaderImage headerImage, @NonNull VideoBean videoBean) throws Exception {
+                        for (int i = 0; i < headerImage.getResults().size(); i++) {
+                            String desc = headerImage.getResults().get(i).getDesc();
+                            desc += desc + " " + videoBean.getResults().get(i).getDesc();
+                            headerImage.getResults().get(i).setDesc(desc);
+                        }
+                        return headerImage;
+                    }
+                }).compose(RxSchedulers.<HeaderImage>compose())
                 .subscribe(new Consumer<HeaderImage>() {
                     @Override
                     public void accept(HeaderImage headerImageBaseEntity) throws Exception {

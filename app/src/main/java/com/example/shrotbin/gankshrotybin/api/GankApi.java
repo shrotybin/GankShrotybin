@@ -1,6 +1,7 @@
 package com.example.shrotbin.gankshrotybin.api;
 
 import com.example.shrotbin.gankshrotybin.bean.HeaderImage;
+import com.example.shrotbin.gankshrotybin.bean.VideoBean;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
@@ -20,5 +21,8 @@ public interface GankApi {
 
     @GET("福利/count/10/page/{page}")
     Observable<HeaderImage> getHeaderImage(@Path("page") int page);
+
+    @GET("休息视频/count/10/page/{page}")
+    Observable<VideoBean> getVideo(@Path("page") int page);
 
 }

@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="tablist">
-        <item>Android</item>
-        <item>iOS</item>
+        <item>Gank</item>
         <item>美图</item>
-        <item>前端</item>
-        <item>App</item>
     </string-array>
 </resources>
