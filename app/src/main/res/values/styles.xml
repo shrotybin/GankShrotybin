@@ -14,4 +14,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="TabAppearance" parent="Base.TextAppearance.AppCompat.Button">
+        <item name="textAllCaps">false</item>
+    </style>
+
 </resources>
