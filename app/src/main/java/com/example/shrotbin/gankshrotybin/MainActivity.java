@@ -5,13 +5,16 @@ import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.shrotbin.gankshrotybin.base.RxSchedulers;
 import com.example.shrotbin.gankshrotybin.bean.HeaderImage;
 import com.example.shrotbin.gankshrotybin.bean.VideoBean;
 import com.example.shrotbin.gankshrotybin.net.RetrofitFactory;
+import com.example.shrotbin.gankshrotybin.widget.RatioImageView;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 
@@ -22,6 +25,8 @@ import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
+
+import static com.bumptech.glide.Glide.with;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,13 +50,15 @@ public class MainActivity extends AppCompatActivity {
         mCommonAdapter = new CommonAdapter<HeaderImage.ResultsBean>(this, R.layout.item_header_iamge, mResultsBean) {
             @Override
             protected void convert(ViewHolder holder, HeaderImage.ResultsBean resultsBean, int position) {
-                ImageView imageView = holder.getView(R.id.header_iamge);
-                Glide.with(MainActivity.this).load(resultsBean.getUrl()).into(imageView);
+                RatioImageView imageView = holder.getView(R.id.header_iamge);
+                RequestOptions requestOptions=new RequestOptions();
+                requestOptions.centerCrop();
+                Glide.with(MainActivity.this).asBitmap().load(resultsBean.getUrl()).apply(requestOptions).into(imageView);
                 holder.setText(R.id.header_desc, resultsBean.getDesc());
             }
         };
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true);
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
 
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mCommonAdapter);
