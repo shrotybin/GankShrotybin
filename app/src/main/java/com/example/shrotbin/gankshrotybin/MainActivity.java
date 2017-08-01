@@ -51,9 +51,7 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mCommonAdapter);
 
-        RetrofitFactory retrofitFactory = new RetrofitFactory();
-
-        retrofitFactory.getGankApi().getHeaderImage(1)
+        RetrofitFactory.getInstence().getGankApi().getHeaderImage(1)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<HeaderImage>() {

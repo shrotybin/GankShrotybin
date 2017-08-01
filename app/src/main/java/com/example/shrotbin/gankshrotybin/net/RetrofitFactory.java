@@ -21,9 +21,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitFactory {
 
-    public final GankApi mGankApi;
+    private static RetrofitFactory mRetrofitFactory = new RetrofitFactory();
+    private final GankApi mGankApi;
 
-    public RetrofitFactory() {
+    public static RetrofitFactory getInstence() {
+        return mRetrofitFactory;
+    }
+
+    private RetrofitFactory() {
         OkHttpClient.Builder client = new OkHttpClient.Builder();
         client.connectTimeout(15, TimeUnit.SECONDS);
         OkHttpClient build = client.build();
