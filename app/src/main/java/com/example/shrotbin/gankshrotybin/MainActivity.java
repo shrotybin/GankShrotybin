@@ -61,8 +61,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public HeaderImage apply(@NonNull HeaderImage headerImage, @NonNull VideoBean videoBean) throws Exception {
                         for (int i = 0; i < headerImage.getResults().size(); i++) {
-                            String desc = headerImage.getResults().get(i).getDesc();
-                            desc += desc + " " + videoBean.getResults().get(i).getDesc();
+                            String desc = headerImage.getResults().get(i).getDesc() + " " + videoBean.getResults().get(i).getDesc();
                             headerImage.getResults().get(i).setDesc(desc);
                         }
                         return headerImage;
