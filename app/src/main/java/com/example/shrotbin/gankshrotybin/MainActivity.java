@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.example.shrotbin.gankshrotybin.base.RxSchedulers;
 import com.example.shrotbin.gankshrotybin.bean.HeaderImage;
 import com.example.shrotbin.gankshrotybin.net.RetrofitFactory;
 import com.zhy.adapter.recyclerview.CommonAdapter;
@@ -16,12 +17,11 @@ import com.zhy.adapter.recyclerview.base.ViewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
     private RecyclerView mRecyclerView;
     private TabLayout mTabLayout;
     private CommonAdapter<HeaderImage.ResultsBean> mCommonAdapter;
@@ -52,13 +52,12 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mCommonAdapter);
 
         RetrofitFactory.getInstence().getGankApi().getHeaderImage(1)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
+                .compose(RxSchedulers.<HeaderImage>compose())
                 .subscribe(new Consumer<HeaderImage>() {
                     @Override
-                    public void accept(HeaderImage headerImage) throws Exception {
+                    public void accept(HeaderImage headerImageBaseEntity) throws Exception {
                         mResultsBean.clear();
-                        mResultsBean.addAll(headerImage.getResults());
+                        mResultsBean.addAll(headerImageBaseEntity.getResults());
                         mCommonAdapter.notifyDataSetChanged();
                     }
                 });
