@@ -6,15 +6,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.example.shrotbin.gankshrotybin.base.RxSchedulers;
 import com.example.shrotbin.gankshrotybin.bean.HeaderImage;
 import com.example.shrotbin.gankshrotybin.bean.VideoBean;
 import com.example.shrotbin.gankshrotybin.net.RetrofitFactory;
-import com.example.shrotbin.gankshrotybin.widget.RatioImageView;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 
@@ -25,8 +26,6 @@ import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
-
-import static com.bumptech.glide.Glide.with;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,22 +48,30 @@ public class MainActivity extends AppCompatActivity {
 
         mCommonAdapter = new CommonAdapter<HeaderImage.ResultsBean>(this, R.layout.item_header_iamge, mResultsBean) {
             @Override
-            protected void convert(ViewHolder holder, HeaderImage.ResultsBean resultsBean, int position) {
-                RatioImageView imageView = holder.getView(R.id.header_iamge);
-                RequestOptions requestOptions=new RequestOptions();
+            protected void convert(final ViewHolder holder, HeaderImage.ResultsBean resultsBean, int position) {
+                final ImageView imageView = holder.getView(R.id.header_iamge);
+                RequestOptions requestOptions = new RequestOptions();
                 requestOptions.centerCrop();
-                Glide.with(MainActivity.this).asBitmap().load(resultsBean.getUrl()).apply(requestOptions).into(imageView);
+                Glide.with(MainActivity.this).load(resultsBean.getUrl()).apply(requestOptions).into(imageView).getSize(new SizeReadyCallback() {
+                    @Override
+                    public void onSizeReady(int width, int height) {
+                        if (!imageView.isShown()) {
+                            holder.getView(R.id.header_item).setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
                 holder.setText(R.id.header_desc, resultsBean.getDesc());
             }
         };
 
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
+        final StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
 
+        layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mCommonAdapter);
 
         Observable.zip(RetrofitFactory.getInstence().getGankApi().getHeaderImage(1),
-                RetrofitFactory.getInstence().getGankApi().getVideo(10), new BiFunction<HeaderImage, VideoBean, HeaderImage>() {
+                RetrofitFactory.getInstence().getGankApi().getVideo(1), new BiFunction<HeaderImage, VideoBean, HeaderImage>() {
                     @Override
                     public HeaderImage apply(@NonNull HeaderImage headerImage, @NonNull VideoBean videoBean) throws Exception {
                         for (int i = 0; i < headerImage.getResults().size(); i++) {

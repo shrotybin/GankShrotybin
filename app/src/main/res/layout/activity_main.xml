@@ -11,6 +11,7 @@
         android:id="@+id/main_tab"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:background="@color/colorPrimaryDark"
         app:tabBackground="@color/colorPrimaryDark"
         app:tabMode="scrollable"
         app:tabSelectedTextColor="#6de4b9"
